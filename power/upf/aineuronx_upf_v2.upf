@@ -1,0 +1,37 @@
+# ============================================
+# AINeuronX N200 - UPF v2
+# ============================================
+
+set_design_top Tile_Top
+
+# -------- Power Domains --------
+create_power_domain PD_ALWAYS_ON -elements {
+    tile_dvfs_if*
+    tile_clock_gating*
+    tile_reset_ctrl*
+}
+
+create_power_domain PD_TILE -elements {
+    Tile_Core_Compute*
+    Tile_Router*
+    tile_metrics*
+}
+
+# -------- Supply Nets --------
+create_supply_net VDD_TILE
+create_supply_net VSS
+
+create_supply_port VDD_TILE -domain PD_TILE
+create_supply_port VSS      -domain PD_TILE
+
+create_supply_port VDD_AON -domain PD_ALWAYS_ON
+create_supply_port VSS     -domain PD_ALWAYS_ON
+
+# -------- Power Switch --------
+create_power_switch PS_TILE \
+    -domain PD_TILE \
+    -input_supply_port  {VDD VDD_TILE} \
+    -output_supply_port {VDD_SW VDD_TILE} \
+    -control_port {tile_power_ctrl.power_en} \
+    -on_state {ON VDD_TILE} \
+    -off_state {OFF}

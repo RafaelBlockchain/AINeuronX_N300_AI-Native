@@ -1,0 +1,61 @@
+`timescale 1ns/1ps
+module AINeuronX_ARRAY_16x16_TB;
+
+  parameter DW = 16;
+  logic clk;
+  logic rst_n;
+  logic in_valid;
+  logic [DW-1:0] a [0:255];
+  logic [DW-1:0] b [0:255];
+  logic out_valid;
+  logic [DW-1:0] result [0:255];
+
+  // Clock
+  initial clk = 0;
+  always #5 clk = ~clk;
+
+  // Instancia del ARRAY 16x16
+  AINeuronX_ARRAY_16x16 dut (
+      .clk(clk),
+      .rst_n(rst_n),
+      .in_valid(in_valid),
+      .a(a),
+      .b(b),
+      .out_valid(out_valid),
+      .result(result)
+  );
+
+  initial begin
+      rst_n = 0;
+      in_valid = 0;
+      for (int i = 0; i < 256; i++) begin
+          a[i] = 0;
+          b[i] = 0;
+      end
+
+      @(posedge clk); @(posedge clk);
+      rst_n = 1;
+      @(posedge clk);
+
+      // Enviar estímulos
+      for (int i = 0; i < 256; i++) begin
+          a[i] = i;
+          b[i] = 2*i;
+      end
+      in_valid = 1;
+      @(posedge clk);
+      in_valid = 0;
+
+      while (!out_valid) @(posedge clk);
+
+      $display("ARRAY 16x16 RESULTS:");
+      for (int i = 0; i < 256; i=i+16) begin
+          $display("%0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d", 
+                   result[i], result[i+1], result[i+2], result[i+3], result[i+4], result[i+5], result[i+6], result[i+7],
+                   result[i+8], result[i+9], result[i+10], result[i+11], result[i+12], result[i+13], result[i+14], result[i+15]);
+      end
+
+      @(posedge clk);
+      $finish;
+  end
+endmodule

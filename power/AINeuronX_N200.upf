@@ -1,0 +1,27 @@
+create_power_domain PD_CLUSTER_0 -elements {cluster0/*}
+create_power_domain PD_CLUSTER_1 -elements {cluster1/*}
+
+create_supply_port VDD
+create_supply_port VSS
+
+create_supply_net VDD
+create_supply_net VSS
+
+connect_supply_net VDD -ports {VDD}
+connect_supply_net VSS -ports {VSS}
+
+set_domain_supply_net PD_CLUSTER_0 -primary_power_net VDD -primary_ground_net VSS
+set_domain_supply_net PD_CLUSTER_1 -primary_power_net VDD -primary_ground_net VSS
+
+create_power_switch PS_CLUSTER0 \
+  -domain PD_CLUSTER_0 \
+  -input_supply_port VDD \
+  -output_supply_port VDD_CLUSTER0 \
+  -control_port cluster0_pwr_en
+
+set_isolation ISO_CLUSTER0 \
+  -domain PD_CLUSTER_0 \
+  -isolation_power_net VDD \
+  -isolation_ground_net VSS \
+  -isolation_signal {noc_if_*} \
+  -clamp_value 0

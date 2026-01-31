@@ -1,0 +1,44 @@
+from emulator.core.clock import Clock
+from emulator.core.state import GlobalState
+from emulator.noc.noc import NoC
+from emulator.memory.dma import DMAEngine
+from emulator.logging.logger import EventLogger
+
+
+class Emulator:
+    def __init__(self, tiles, max_cycle=1000, width=4, height=4, hop_latency=1):
+        self.logger = EventLogger()
+
+        self.clock = Clock()
+        self.tiles = tiles
+        self.state = GlobalState.RUNNING
+        self.max_cycle = max_cycle
+
+        self.noc = NoC(
+            width=width,
+            height=height,
+            hop_latency=hop_latency,
+            logger=self.logger,
+        )
+
+        self.dma = DMAEngine()
+
+    def step(self):
+        self.clock.tick()
+        cycle = self.clock.cycle
+
+        self.dma.step()
+        self.noc.step(cycle)
+
+        for tile in self.tiles:
+            tile.step(cycle)
+
+        if all(
+            tile.pc >= len(tile.program) and tile.current is None
+            for tile in self.tiles
+        ):
+            self.state = GlobalState.DONE
+
+    def run(self):
+        while self.state == GlobalState.RUNNING and self.clock.cycle < self.max_cycle:
+            self.step()

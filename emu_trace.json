@@ -1,0 +1,22 @@
+[
+  {
+    "cycle": 0,
+    "opcode": "VADD",
+    "event": "COMMIT"
+  },
+  {
+    "cycle": 1,
+    "opcode": "VADD",
+    "event": "COMMIT"
+  },
+  {
+    "cycle": 2,
+    "opcode": "VADD",
+    "event": "COMMIT"
+  },
+  {
+    "cycle": 3,
+    "opcode": "VADD",
+    "event": "COMMIT"
+  }
+]

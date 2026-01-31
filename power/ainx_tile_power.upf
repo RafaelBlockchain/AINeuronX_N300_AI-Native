@@ -1,0 +1,62 @@
+# ============================================
+# AINeuronX N200 - Tile Power Intent (v1)
+# ============================================
+
+# --------------------------------------------
+# Power Domains
+# --------------------------------------------
+create_power_domain PD_TILE    -elements {Tile_Top}
+create_power_domain PD_CORE    -elements {Tile_Core_Compute}
+create_power_domain PD_ROUTER  -elements {Tile_Router}
+
+# --------------------------------------------
+# Supply Nets
+# --------------------------------------------
+create_supply_net VDD
+create_supply_net VSS
+
+# --------------------------------------------
+# Supply Sets
+# --------------------------------------------
+create_supply_set SS_TILE   -power {VDD} -ground {VSS}
+create_supply_set SS_CORE   -power {VDD} -ground {VSS}
+create_supply_set SS_ROUTER -power {VDD} -ground {VSS}
+
+# --------------------------------------------
+# Connect Supplies
+# --------------------------------------------
+set_domain_supply_set PD_TILE   -supply_set SS_TILE
+set_domain_supply_set PD_CORE   -supply_set SS_CORE
+set_domain_supply_set PD_ROUTER -supply_set SS_ROUTER
+
+# --------------------------------------------
+# Power Switch (Tile-level gating)
+# --------------------------------------------
+create_power_switch PS_TILE \
+    -domain PD_TILE \
+    -input_supply VDD \
+    -output_supply VDD_TILE \
+    -control_signal power_gate \
+    -on_state  {power_gate == 1'b0} \
+    -off_state {power_gate == 1'b1}
+
+# --------------------------------------------
+# Clock Gating Awareness
+# --------------------------------------------
+set_clock_gating_signal \
+    -domain PD_TILE \
+    -signal tile_clk_enable
+
+# --------------------------------------------
+# Power States (abstract)
+# --------------------------------------------
+add_power_state PS_OFF      -domain PD_TILE -logic_expr {power_gate == 1}
+add_power_state PS_ACTIVE   -domain PD_TILE -logic_expr {power_gate == 0}
+
+# --------------------------------------------
+# Notes
+# --------------------------------------------
+# v1:
+# - No isolation cells yet
+# - No retention yet
+# - Focus: synthesis + STA + power intent clarity

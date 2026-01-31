@@ -1,0 +1,9 @@
+module clock_gate(
+    input logic clk,
+    input logic enable,
+    output logic gclk
+);
+    logic en_latched;
+    always_latch if (!clk) en_latched <= enable;
+    assign gclk = clk & en_latched;
+endmodule

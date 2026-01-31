@@ -1,0 +1,18 @@
+create_power_domain PD_TILE -elements { AINeuronX_TILE_XY* }
+
+create_supply_port VDD
+create_supply_port VSS
+
+create_supply_net VDD
+create_supply_net VSS
+
+connect_supply_net VDD -ports {VDD}
+connect_supply_net VSS -ports {VSS}
+
+set_domain_supply_net PD_TILE -primary_power_net VDD -primary_ground_net VSS
+
+set_isolation ISO_TILE \
+  -domain PD_TILE \
+  -isolation_power_net VDD \
+  -isolation_ground_net VSS \
+  -clamp_value 0

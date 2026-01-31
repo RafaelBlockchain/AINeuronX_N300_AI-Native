@@ -1,0 +1,8 @@
+latency:
+  scalar: 1
+  vector: 4
+  tensor:
+    T_MATMUL: 32
+    T_REDUCE: 16
+  dma:
+    base: 8

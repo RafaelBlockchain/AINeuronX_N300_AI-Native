@@ -1,0 +1,28 @@
+name: Golden Check N200
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  golden:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3 iverilog
+
+    - name: Run Golden Emulator
+      run: |
+        python3 -m emulator.run
+        ls -l emu_trace.json
+
+    - name: Check N200 Performance Targets
+      run: |
+        python3 -m metrics.check_targets
+
