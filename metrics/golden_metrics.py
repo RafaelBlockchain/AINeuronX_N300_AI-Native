@@ -7,9 +7,9 @@ trace = load_trace("emu_trace.json")
 metrics = {
     "Latency (cycles)": compute_latency(trace),
     "IPC": compute_ipc(trace),
-    "Vector Util": utilization(trace, "V_"),
-    "Tensor Util": utilization(trace, "T_"),
-    "DMA Util": utilization(trace, "DMA_"),
+    "Vector Util": utilization(trace, "V"),
+    "Tensor Util": utilization(trace, "T"),
+    "DMA Util": utilization(trace, "DMA"),
 }
 
 print_report(metrics)
