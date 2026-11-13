@@ -1,6 +1,6 @@
 from emulator.core.emulator import Emulator
 from emulator.tile import Tile
-from emulator.program.program import n300
+from emulator.program.program import n300.
 from emulator.logging.logger import EventLogger
 from emulator.memory.dma import DMAEngine
 
