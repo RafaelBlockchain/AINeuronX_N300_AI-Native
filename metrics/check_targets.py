@@ -9,10 +9,10 @@ from metrics.compute_metrics import (
 
 
 # Targets N200 (baseline realista)
-TARGET_IPC = 0.1
-TARGET_VECTOR_UTIL = 0.1
-TARGET_TENSOR_UTIL = 0.0   # permitido en N200
-TARGET_DMA_UTIL = 0.0      # permitido en N200
+TARGET_IPC = 1.0
+TARGET_VECTOR_UTIL = 1.0
+TARGET_TENSOR_UTIL = 0.5  # permitido en N300
+TARGET_DMA_UTIL = 0.3     # permitido en N300
 
 
 def main():
